@@ -7,8 +7,7 @@ public class Main {
 		int agentNum = 20;
 		Agent[] agents = new Agent[agentNum];
 		for(int i = 0; i < agents.length; i ++) {
-			String startingWord = randomWord(r);
-			agents[i] = new Agent(i + 1, startingWord);
+			agents[i] = new Agent(i + 1);
 		}
 		while(steps < 10000) {
 			System.out.print("step " + steps + ": ");
@@ -28,15 +27,23 @@ public class Main {
 			Agent agent = agents[test];
 			Agent agent2 = agents[test2];
 			
-			String str = agent.getRandomWord();
-			System.out.println("Agent " + (test + 1) + " conveys word " + str);
-			if(agent2.contains(str)) {
-				System.out.println("Agent " + (test2 + 1) + " has that word");
-				agent2.removeAllExcept(str);
+			if(agent.inventory() == 0) {
+				System.out.println("Agent " + (test + 1) + " has no words, adding a random word");
+				agent.addWord(randomWord(r));
+				agent2.addWord(randomWord(r));
 			} else {
-				System.out.println("Agent " + (test2 + 1) + " does not have that word");
-				agent2.addWord(str);
+				String str = agent.getRandomWord();
+				System.out.println("Agent " + (test + 1) + " conveys word " + str);
+				if(agent2.contains(str)) {
+					System.out.println("Agent " + (test2 + 1) + " has that word");
+					agent.removeAllExcept(str);
+					agent2.removeAllExcept(str);
+				} else {
+					System.out.println("Agent " + (test2 + 1) + " does not have that word");
+					agent2.addWord(str);
+				}
 			}
+			
 			System.out.println();
 			steps ++;
 		}
@@ -56,6 +63,7 @@ public class Main {
 	}
 	
 	public static boolean converged(Agent[] agents) {
+		if(agents[0].inventory() == 0) return false;
 		String s = agents[0].getTopWord();
 		for(Agent agent : agents) {
 			if(agent.inventory() != 1 || !agent.getTopWord().equals(s)) return false;

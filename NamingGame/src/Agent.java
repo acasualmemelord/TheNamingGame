@@ -8,13 +8,11 @@ public class Agent {
 	private String startingWord;
 	private ArrayList<String> words;
 	
-	public Agent (int id, String startingWord) {
+	public Agent (int id) {
 		this.id = id;
-		this.startingWord = startingWord;
 		this.words = new ArrayList<String>();
-		words.add(startingWord);
 	}
-
+	
 	public String getStartingWord() {
 		return startingWord;
 	}
@@ -37,6 +35,7 @@ public class Agent {
 	}
 	
 	public void addWord(String word) {
+		if(words.size() == 0) startingWord = word;
 		words.add(word);
 	}
 	

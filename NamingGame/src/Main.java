@@ -7,11 +7,21 @@ public class Main {
 		int maxSteps = 30000;
 		for (int i = 0; i < trials; i ++) {
 			System.out.print("trial " + (i + 1) + ": ");
-			trial(agentNum, maxSteps, true, true);
+			trial(agentNum, maxSteps, true, 4, true);
 		}
 	}
 
-	public static void trial(int agentNum, int maxSteps, boolean lattice, boolean debug) {
+	/**
+	 * Runs one trial of the Naming Game.
+	 * @param agentNum number of agents
+	 * @param maxSteps maximum number of steps
+	 * @param lattice whether agents have more random neighbors or 2
+	 * @param connections how many connections each agent should have
+	 * @param debug whether console prints out debug messages
+	 */
+	public static void trial(int agentNum, int maxSteps, boolean lattice, int connections, boolean debug) {
+		if (lattice && connections > agentNum) throw new IllegalArgumentException("the amount of connections cannot exceed the number of agents");
+		
 		Random r = new Random();
 		int steps = 0;
 		boolean converged = false;
@@ -22,10 +32,10 @@ public class Main {
 			agents[i] = new Agent(i + 1);
 		}
 		
-		//if lattice, create 4 connections for each agent
+		//if lattice, create connections for each agent equal to the parameter specified
 		if(lattice) {
 			for(Agent a : agents) {
-				while(a.connections() < 4) {
+				while(a.connections() < connections) {
 					a.addConnection(agents[r.nextInt(agents.length)]);
 				}
 			}
@@ -59,19 +69,22 @@ public class Main {
 			}
 			
 			
-			
 			if(agent.inventory() == 0) {
+				// if speaker has no words, add a word to both speaker and listener
 				if (debug) System.out.println("Agent " + (test + 1) + " has no words, adding a random word");
 				agent.addWord(randomWord(r));
 				agent2.addWord(randomWord(r));
 			} else {
 				String str = agent.getRandomWord();
 				if (debug) System.out.println("Agent " + (test + 1) + " conveys word " + str);
+				
 				if(agent2.contains(str)) {
+					//agent contains word
 					if (debug) System.out.println("Agent " + (test2 + 1) + " has that word");
 					agent.removeAllExcept(str);
 					agent2.removeAllExcept(str);
 				} else {
+					//agent does not contain word
 					if (debug) System.out.println("Agent " + (test2 + 1) + " does not have that word");
 					agent2.addWord(str);
 				}
@@ -88,6 +101,11 @@ public class Main {
 		}
 	}
 	
+	/**
+	 * Creates a random word with a length between 1 and 10.
+	 * @param r
+	 * @return random word
+	 */
 	public static String randomWord(Random r) {
 		int length = r.nextInt(1, 11);
 		String result = "";
@@ -97,6 +115,11 @@ public class Main {
 		return result;
 	}
 	
+	/**
+	 * Checks if all agents have an inventory of 1 consisting of the same word.
+	 * @param agents
+	 * @return true if if all agents have an inventory of 1 consisting of the same word; false otherwise
+	 */
 	public static boolean converged(Agent[] agents) {
 		if(agents[0].inventory() == 0) return false;
 		String s = agents[0].getTopWord();

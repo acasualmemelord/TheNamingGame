@@ -7,10 +7,16 @@ public class Agent {
 	private int id;
 	private String startingWord;
 	private ArrayList<String> words;
+	private ArrayList<Agent> connections;
 	
 	public Agent (int id) {
 		this.id = id;
 		this.words = new ArrayList<String>();
+		this.connections = new ArrayList<Agent>();
+	}
+	
+	public int getID() {
+		return id;
 	}
 	
 	public String getStartingWord() {
@@ -21,6 +27,10 @@ public class Agent {
 		return words.get(0);
 	}
 	
+	/**
+	 * Gets a random word from the wordlist.
+	 * @return a random word from the wordlist 
+	 */
 	public String getRandomWord() {
 		Random r = new Random();
 		return words.get(r.nextInt(0, words.size()));
@@ -37,6 +47,21 @@ public class Agent {
 	public void addWord(String word) {
 		if(words.size() == 0) startingWord = word;
 		words.add(word);
+	}
+	
+	public boolean addConnection(Agent a) {
+		if(connections.contains(a)) return false;
+		connections.add(a);
+		return true;
+	}
+	
+	public Agent getRandomConnection() {
+		Random r = new Random();
+		return connections.get(r.nextInt(connections.size()));
+	}
+	
+	public int connections() {
+		return connections.size();
 	}
 	
 	public void removeAllExcept(String word) {

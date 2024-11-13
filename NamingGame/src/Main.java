@@ -1,11 +1,11 @@
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 
 public class Main {
 	public static void main(String[] args) {
 		int trials = 1;
-		int agentNum = 100;
-		int maxSteps = 30000;
+		int agentNum = 20;
+		int maxSteps = 10;
 		for (int i = 0; i < trials; i ++) {
 			System.out.print("trial " + (i + 1) + ": ");
 			trial(agentNum, maxSteps, true, 4, true);
@@ -101,6 +101,13 @@ public class Main {
 			for(Agent a : agents) {
 				System.out.println(a);
 			}
+			System.out.println();
+		}
+		HashMap<String, Integer> map = listOfWords(agents);
+		for (String name: map.keySet()) {
+		    String key = name.toString();
+		    String value = map.get(name).toString();
+		    System.out.println(key + ": " + value);
 		}
 	}
 	
@@ -133,15 +140,17 @@ public class Main {
 	}
 	
 	/**
-	 * Gets a list of all words present among all agents.
+	 * Gets a hashmap of all words present among all agents, 
+	 * where the key is the word and the value is the amount of times it appears.
 	 * @param agents the list of agents used in a trial
-	 * @return an ArrayList of String
+	 * @return a HashMap of String/Integer
 	 */
-	public static ArrayList<String> listOfWords(Agent[] agents){
-		ArrayList<String> list = new ArrayList<String>();
+	public static HashMap<String, Integer> listOfWords(Agent[] agents){
+		HashMap<String, Integer> list = new HashMap<String, Integer>();
 		for(Agent a: agents) {
 			for(String s: a.getAllWords()) {
-				if(!list.contains(s)) list.add(s);
+				if(!list.containsKey(s)) list.put(s, 1);
+				else list.replace(s, list.get(s) + 1);
 			}
 		}
 		return list;

@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Random;
 
 public class Main {
@@ -47,6 +48,8 @@ public class Main {
 				converged = true;
 				break;
 			}
+			
+			if(debug) System.out.print("step " + steps + ": ");
 			
 			//pick two random agents
 			int test = r.nextInt(0, agents.length);
@@ -127,5 +130,20 @@ public class Main {
 			if(agent.inventory() != 1 || !agent.getTopWord().equals(s)) return false;
 		}
 		return true;
+	}
+	
+	/**
+	 * Gets a list of all words present among all agents.
+	 * @param agents the list of agents used in a trial
+	 * @return an ArrayList of String
+	 */
+	public static ArrayList<String> listOfWords(Agent[] agents){
+		ArrayList<String> list = new ArrayList<String>();
+		for(Agent a: agents) {
+			for(String s: a.getAllWords()) {
+				if(!list.contains(s)) list.add(s);
+			}
+		}
+		return list;
 	}
 }

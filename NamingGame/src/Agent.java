@@ -80,6 +80,10 @@ public class Agent {
 		return words.get(0);
 	}
 	
+	public ArrayList<String> getAllWords() {
+		return words;
+	}
+	
 	public int inventory() {
 		return words.size();
 	}

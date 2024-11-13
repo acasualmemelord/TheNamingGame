@@ -73,10 +73,9 @@ public class Main {
 			
 			
 			if(agent.inventory() == 0) {
-				// if speaker has no words, add a word to both speaker and listener
+				// if speaker has no words, add a word to speaker
 				if (debug) System.out.println("Agent " + (test + 1) + " has no words, adding a random word");
 				agent.addWord(randomWord(r));
-				agent2.addWord(randomWord(r));
 			} else {
 				String str = agent.getRandomWord();
 				if (debug) System.out.println("Agent " + (test + 1) + " conveys word " + str);
@@ -140,7 +139,7 @@ public class Main {
 	}
 	
 	/**
-	 * Gets a hashmap of all words present among all agents, 
+	 * Gets a HashMap of all words present among all agents, 
 	 * where the key is the word and the value is the amount of times it appears.
 	 * @param agents the list of agents used in a trial
 	 * @return a HashMap of String/Integer

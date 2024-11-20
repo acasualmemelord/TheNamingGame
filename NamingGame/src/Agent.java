@@ -39,8 +39,9 @@ public class Agent {
 	 * @return whether adding was successful
 	 */
 	public boolean addConnection(Agent a) {
-		if(connections.contains(a)) return false;
+		if(connections.contains(a) || a.getID() == id) return false;
 		connections.add(a);
+		a.getConnections().add(this);
 		return true;
 	}
 	
@@ -94,6 +95,10 @@ public class Agent {
 	
 	public int connections() {
 		return connections.size();
+	}
+	
+	public ArrayList<Agent> getConnections(){
+		return connections;
 	}
 	
 	public String toString() {

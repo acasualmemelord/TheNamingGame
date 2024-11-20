@@ -12,8 +12,8 @@ public class GetdataHandler implements HttpHandler {
                 {
                     "message": "Data fetched successfully",
                     "data": {
-                        "word": "apple",
-                        "value": 10
+                        "words": map.keySet(),
+                        "values": map.values()
                     }
                 }
                 """;

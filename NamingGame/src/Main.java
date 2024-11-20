@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Random;
 
@@ -5,10 +7,10 @@ public class Main {
 	public static void main(String[] args) {
 		int trials = 1;
 		int agentNum = 20;
-		int maxSteps = 10;
+		int maxSteps = 10000;
 		for (int i = 0; i < trials; i ++) {
 			System.out.print("trial " + (i + 1) + ": ");
-			trial(agentNum, maxSteps, true, 4, true);
+			trial(agentNum, maxSteps, true, 2, false);
 		}
 	}
 
@@ -27,22 +29,28 @@ public class Main {
 		Random r = new Random();
 		int steps = 0;
 		boolean converged = false;
-		Agent[] agents = new Agent[agentNum];
 		
 		//create list of agents
-		for(int i = 0; i < agents.length; i ++) {
-			agents[i] = new Agent(i + 1);
-		}
-		
-		//if lattice, create connections for each agent equal to the parameter specified
-		if(lattice) {
-			for(Agent a : agents) {
-				while(a.connections() < connections) {
-					a.addConnection(agents[r.nextInt(agents.length)]);
+		ArrayList<Agent> agents = new ArrayList<Agent>();
+		ArrayList<Agent> list = new ArrayList<Agent>();
+		for(int i = 0; i < agentNum; i ++) {
+			Agent a = new Agent(i + 1);
+			agents.add(a);
+			//if lattice, create connections for each agent equal to the parameter specified
+			if (i != 0 && lattice) {
+				while(a.connections() < connections && a.connections() < i) {
+					Agent b = null;
+					if (list.isEmpty()) b = agents.get(r.nextInt(agents.size()));
+					else b = list.get(r.nextInt(list.size()));
+					if (a.addConnection(b)) {
+						list.add(a);
+						list.add(b);
+					}
 				}
 			}
 		}
 		
+		HashMap<String, Integer> map = listOfWords(agents);
 		//loop until maxsteps are reached or all agents converge
 		while(steps < maxSteps) {
 			if(converged(agents)) {
@@ -50,12 +58,18 @@ public class Main {
 				break;
 			}
 			
+			if(steps % 100 == 0) {
+				map = listOfWords(agents);
+				System.out.println(map.keySet());
+				System.out.println(map.values());
+			}
+			
 			if(debug) System.out.print("step " + steps + ": ");
 			
 			//pick two random agents
-			int test = r.nextInt(0, agents.length);
+			int test = r.nextInt(0, agents.size());
 			int test2 = 0;
-			Agent agent = agents[test];
+			Agent agent = agents.get(test);
 			Agent agent2;
 			if (lattice) {
 				// if lattice pick from random connection
@@ -64,12 +78,12 @@ public class Main {
 			} else {
 				//otherwise pick random neighbor
 				if (test == 0) test2 = 1;
-				else if (test == agents.length - 1) test2 = agents.length - 2;
+				else if (test == agents.size() - 1) test2 = agents.size() - 2;
 				else {
 					if (r.nextBoolean()) test2 = test - 1;
 					else test2 = test + 1;
 				}
-				agent2 = agents[test2];
+				agent2 = agents.get(test2);
 			}
 			
 			
@@ -103,12 +117,6 @@ public class Main {
 			}
 			System.out.println();
 		}
-		HashMap<String, Integer> map = listOfWords(agents);
-		for (String name: map.keySet()) {
-		    String key = name.toString();
-		    String value = map.get(name).toString();
-		    System.out.println(key + ": " + value);
-		}
 	}
 	
 	/**
@@ -130,9 +138,9 @@ public class Main {
 	 * @param agents
 	 * @return true if if all agents have an inventory of 1 consisting of the same word; false otherwise
 	 */
-	public static boolean converged(Agent[] agents) {
-		if(agents[0].inventory() == 0) return false;
-		String s = agents[0].getTopWord();
+	public static boolean converged(ArrayList<Agent> agents) {
+		if(agents.get(0).inventory() == 0) return false;
+		String s = agents.get(0).getTopWord();
 		for(Agent agent : agents) {
 			if(agent.inventory() != 1 || !agent.getTopWord().equals(s)) return false;
 		}
@@ -145,7 +153,7 @@ public class Main {
 	 * @param agents the list of agents used in a trial
 	 * @return a HashMap of String/Integer
 	 */
-	public static HashMap<String, Integer> listOfWords(Agent[] agents){
+	public static HashMap<String, Integer> listOfWords(ArrayList<Agent> agents){
 		HashMap<String, Integer> list = new HashMap<String, Integer>();
 		for(Agent a: agents) {
 			for(String s: a.getAllWords()) {

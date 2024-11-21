@@ -1,9 +1,5 @@
 import com.sun.net.httpserver.HttpServer;
-import com.sun.net.httpserver.HttpHandler;
-import com.sun.net.httpserver.HttpExchange;
-
 import java.io.IOException;
-import java.io.OutputStream;
 import java.net.InetSocketAddress;
 
 public class Server {
@@ -15,5 +11,6 @@ public class Server {
         server.setExecutor(null); 
         System.out.println("Server is running on http://localhost:8080");
         server.start();
+        Main.trial(20, 10000, true, 2, false);
     }
 }

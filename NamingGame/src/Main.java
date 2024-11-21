@@ -1,16 +1,16 @@
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Random;
 
 public class Main {
+	public static HashMap<String, Integer> map = new HashMap<>();
 	public static void main(String[] args) {
 		int trials = 1;
-		int agentNum = 20;
-		int maxSteps = 10000;
+		int agentNum = 100;
+		int maxSteps = 100000;
 		for (int i = 0; i < trials; i ++) {
 			System.out.print("trial " + (i + 1) + ": ");
-			trial(agentNum, maxSteps, true, 2, false);
+			trial(agentNum, maxSteps, true, 2, true);
 		}
 	}
 
@@ -50,7 +50,7 @@ public class Main {
 			}
 		}
 		
-		HashMap<String, Integer> map = listOfWords(agents);
+		map = listOfWords(agents);
 		//loop until maxsteps are reached or all agents converge
 		while(steps < maxSteps) {
 			if(converged(agents)) {
@@ -58,13 +58,10 @@ public class Main {
 				break;
 			}
 			
-			if(steps % 100 == 0) {
+			if(debug && steps > 0 && steps % 500 == 0) {
 				map = listOfWords(agents);
-				System.out.println(map.keySet());
-				System.out.println(map.values());
+				System.out.println("step " + steps + ": " + mapToString(map));
 			}
-			
-			if(debug) System.out.print("step " + steps + ": ");
 			
 			//pick two random agents
 			int test = r.nextInt(0, agents.size());
@@ -89,20 +86,16 @@ public class Main {
 			
 			if(agent.inventory() == 0) {
 				// if speaker has no words, add a word to speaker
-				if (debug) System.out.println("Agent " + (test + 1) + " has no words, adding a random word");
 				agent.addWord(randomWord(r));
 			} else {
 				String str = agent.getRandomWord();
-				if (debug) System.out.println("Agent " + (test + 1) + " conveys word " + str);
 				
 				if(agent2.contains(str)) {
 					//agent contains word
-					if (debug) System.out.println("Agent " + (test2 + 1) + " has that word");
 					agent.removeAllExcept(str);
 					agent2.removeAllExcept(str);
 				} else {
 					//agent does not contain word
-					if (debug) System.out.println("Agent " + (test2 + 1) + " does not have that word");
 					agent2.addWord(str);
 				}
 			}
@@ -110,13 +103,6 @@ public class Main {
 		}
 		if(converged) System.out.println("All agents converged within " + steps + " steps");
 		else System.out.println("Agents did not converge within the maximum steps");
-		
-		if(debug) {
-			for(Agent a : agents) {
-				System.out.println(a);
-			}
-			System.out.println();
-		}
 	}
 	
 	/**
@@ -162,5 +148,18 @@ public class Main {
 			}
 		}
 		return list;
+	}
+	
+	/**
+	 * Formats the HashMap into a readable String. For debug only.
+	 * @param map the HashMap of String/Integer
+	 * @return a String representation of the map
+	 */
+	public static String mapToString(HashMap<String, Integer> map) {
+		String result = "";
+		for (String s : map.keySet()) {
+			result += String.format("%s: %d, ", s, map.get(s));
+		}
+		return result.substring(0, result.length() - 2);
 	}
 }

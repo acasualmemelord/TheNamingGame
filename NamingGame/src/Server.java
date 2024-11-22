@@ -7,7 +7,7 @@ public class Server {
 
         HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
         server.createContext("/get", new GetdataHandler());
-
+        server.createContext("/send", new SenddataHandler());
         server.setExecutor(null); 
         System.out.println("Server is running on http://localhost:8080");
         server.start();

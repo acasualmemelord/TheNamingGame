@@ -21,13 +21,18 @@ public class SenddataHandler implements HttpHandler {
             int number = data.getOrDefault("number", 0);
             int bar = data.getOrDefault("bar", 0);
             int word = data.getOrDefault("word", 0);
-
+            System.out.println("Received data: " + data);
+            System.out.print("Trial: " + trial + ", ");
+            System.out.print("Number: " + number + ", ");
+            System.out.print("Bar: " + bar + ", ");
+            System.out.println("Word: " + word);
+            
             String response = String.format("""
                 {
                     "message": "Data fetched successfully",
                     "receivedData": {
                         "trial": %d,
-                        "number": %d,
+                        "agent": %d,
                         "bar": %d,
                         "word": %d
                     }

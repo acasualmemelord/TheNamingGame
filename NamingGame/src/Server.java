@@ -11,6 +11,6 @@ public class Server {
         server.setExecutor(null); 
         System.out.println("Server is running on http://localhost:8080");
         server.start();
-        Main.trial(20, 10000, true, 2, false);
+        Main.trial(100, 100000, true, 2, false);
     }
 }

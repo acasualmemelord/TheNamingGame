@@ -101,6 +101,10 @@ public class Agent {
 		return connections;
 	}
 	
+	public void printConnections() {
+		System.out.printf("Agent %d: %d connections\n", id, connections.size());
+	}
+	
 	public String toString() {
 		return String.format("Agent %d (starting word %s): %s", id, startingWord, Arrays.toString(words.toArray()));
 	}

@@ -31,7 +31,6 @@ public class GetdataHandler implements HttpHandler {
                 os.write(response.getBytes());
             }
         } else {
-            
             String response = "Method Not Allowed";
             exchange.sendResponseHeaders(405, response.getBytes().length);
             try (OutputStream os = exchange.getResponseBody()) {

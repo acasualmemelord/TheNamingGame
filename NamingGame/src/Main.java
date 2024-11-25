@@ -4,14 +4,20 @@ import java.util.Random;
 
 public class Main {
 	public static HashMap<String, Integer> map = new HashMap<>();
+	public static ArrayList<Integer> arr = new ArrayList<>();
 	public static void main(String[] args) {
-		int trials = 1;
-		int agentNum = 100;
-		int maxSteps = 100000;
+		int trials = 1000;
+		int agentNum = 500;
+		int maxSteps = 1000000;
 		for (int i = 0; i < trials; i ++) {
 			System.out.print("trial " + (i + 1) + ": ");
-			trial(agentNum, maxSteps, true, 2, true);
+			trial(agentNum, maxSteps, true, 2, false);
 		}
+		int sum = 0;
+		for (int i : arr) {
+			sum += i;
+		}
+		System.out.println("average: " + (sum / arr.size()));
 	}
 
 	/**
@@ -49,6 +55,11 @@ public class Main {
 				}
 			}
 		}
+		if (debug) {
+			for (Agent a : agents) {
+				a.printConnections();
+			}
+		}
 		
 		map = listOfWords(agents);
 		//loop until maxsteps are reached or all agents converge
@@ -58,9 +69,9 @@ public class Main {
 				break;
 			}
 			
-			if(debug && steps > 0 && steps % 500 == 0) {
+			if(steps > 0 && steps % 500 == 0) {
 				map = listOfWords(agents);
-				System.out.println("step " + steps + ": " + mapToString(map));
+				if (debug) System.out.println("step " + steps + ": " + mapToString(map));
 			}
 			
 			//pick two random agents
@@ -101,7 +112,10 @@ public class Main {
 			}
 			steps ++;
 		}
-		if(converged) System.out.println("All agents converged within " + steps + " steps");
+		if(converged) {
+			System.out.println("All agents converged within " + steps + " steps");
+			arr.add(steps);
+		}
 		else System.out.println("Agents did not converge within the maximum steps");
 	}
 	

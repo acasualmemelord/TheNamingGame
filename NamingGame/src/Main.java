@@ -1,5 +1,9 @@
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Random;
 
 public class Main {
@@ -7,7 +11,7 @@ public class Main {
 	public static ArrayList<Integer> arr = new ArrayList<>();
 	public static void main(String[] args) {
 		int trials = 1000;
-		int agentNum = 500;
+		int agentNum = 1000;
 		int maxSteps = 1000000;
 		for (int i = 0; i < trials; i ++) {
 			System.out.print("trial " + (i + 1) + ": ");
@@ -58,11 +62,6 @@ public class Main {
 				}
 			}
 		}
-		if (debug) {
-			for (Agent a : agents) {
-				a.printConnections();
-			}
-		}
 		
 		map = listOfWords(agents);
 		//loop until maxsteps are reached or all agents converge
@@ -74,6 +73,7 @@ public class Main {
 			
 			if(steps > 0 && steps % 500 == 0) {
 				map = listOfWords(agents);
+				if(map.keySet().size() > 20) map = shortenMap(map);
 				if (debug) System.out.println("step " + steps + ": " + mapToString(map));
 			}
 			
@@ -167,6 +167,26 @@ public class Main {
 		}
 		return list;
 	}
+	
+	/**
+	 * Shortens a map to a max 20 entries. Adapted from https://stackoverflow.com/a/2581754
+	 * @param map The map to be shortened
+	 * @return A shortened map
+	 */
+	public static <K, V extends Comparable<? super V>> HashMap<K, V> shortenMap(Map<K, V> map) {
+        List<Entry<K, V>> list = new ArrayList<>(map.entrySet());
+        list.sort(Entry.comparingByValue());
+
+        HashMap<K, V> result = new LinkedHashMap<>();
+        int i = 0;
+        while(i < list.size() && i < 20) {
+        	Entry<K, V> entry = list.get(i);
+            result.put(entry.getKey(), entry.getValue());
+            i ++;
+        }
+
+        return result;
+    }
 	
 	/**
 	 * Formats the HashMap into a readable String. For debug only.

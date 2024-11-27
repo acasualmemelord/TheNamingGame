@@ -44,7 +44,7 @@ public class SenddataHandler implements HttpHandler {
                 os.write(response.getBytes());
             }
             
-            Main.trial(agent, 100000, (lat == 1), 2, false);
+            Main.trial(agent, Integer.MAX_VALUE, (lat == 1), 2, false);
         } else {
             String response = "Method Not Allowed";
             exchange.sendResponseHeaders(405, response.getBytes().length);

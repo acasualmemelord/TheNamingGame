@@ -1,6 +1,5 @@
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -177,7 +176,7 @@ public class Main {
         List<Entry<K, V>> list = new ArrayList<>(map.entrySet());
         list.sort(Entry.comparingByValue());
 
-        HashMap<K, V> result = new LinkedHashMap<>();
+        HashMap<K, V> result = new HashMap<>();
         int i = 0;
         while(i < list.size() && i < 20) {
         	Entry<K, V> entry = list.get(i);

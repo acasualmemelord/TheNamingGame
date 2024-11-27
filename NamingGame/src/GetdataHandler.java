@@ -1,28 +1,28 @@
-import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.HashMap;
 
 public class GetdataHandler implements HttpHandler {
+    private final HashMap<String, Integer> data;
+    public GetdataHandler() {
+        this.data = Main.map;
+    }
+
     @Override
     public void handle(HttpExchange exchange) throws IOException {
-    	HashMap<String, Integer> map = Main.map;
         if ("GET".equalsIgnoreCase(exchange.getRequestMethod())) {
-        	String temp = "";
-        	for (String str : map.keySet()) {
-        		temp += String.format("\"%s\": %d,\n", str, map.get(str));
-        	}
-        	if(temp.length() > 0) temp = temp.substring(0, temp.length() - 1);
-        	String response = String.format("""
+
+            String dataJson = mapToJson(data);
+
+            String response = String.format("""
                     {
                         "message": "Data fetched successfully",
-                        "data": [
-                            %s
-                        ]
+                        "data": %s
                     }
-                    """, temp.toString());
+                    """, dataJson);
 
             exchange.getResponseHeaders().set("Content-Type", "application/json");
             exchange.sendResponseHeaders(200, response.getBytes().length);
@@ -37,5 +37,26 @@ public class GetdataHandler implements HttpHandler {
                 os.write(response.getBytes());
             }
         }
+    }
+
+    private String mapToJson(HashMap<String, Integer> map) {
+        StringBuilder jsonBuilder = new StringBuilder();
+        jsonBuilder.append("{");
+
+        for (String key : map.keySet()) {
+            Integer value = map.get(key);
+            jsonBuilder.append("\"").append(key).append("\"")
+                       .append(": ")
+                       .append(value)
+                       .append(", ");
+        }
+
+        if (jsonBuilder.length() > 1) {
+            // 移除最后多余的逗号和空格
+            jsonBuilder.setLength(jsonBuilder.length() - 2);
+        }
+
+        jsonBuilder.append("}");
+        return jsonBuilder.toString();
     }
 }

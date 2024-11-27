@@ -1,20 +1,21 @@
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
 
 public class Main {
-	public static HashMap<String, Integer> map = new HashMap<>();
+	public static LinkedHashMap<String, Integer> map = new LinkedHashMap<>();
 	public static ArrayList<Integer> arr = new ArrayList<>();
 	public static void main(String[] args) {
-		int trials = 1000;
+		int trials = 1;
 		int agentNum = 1000;
 		int maxSteps = 1000000;
 		for (int i = 0; i < trials; i ++) {
 			System.out.print("trial " + (i + 1) + ": ");
-			trial(agentNum, maxSteps, true, 2, false);
+			trial(agentNum, maxSteps, true, 2, true);
 		}
 		int sum = 0;
 		for (int i : arr) {
@@ -36,7 +37,7 @@ public class Main {
 		if (lattice && connections < 1) throw new IllegalArgumentException("agents must have at least one connnection");
 		if (lattice && connections > agentNum) throw new IllegalArgumentException("the amount of connections cannot exceed the number of agents");
 		
-		map = new HashMap<>();
+		map = new LinkedHashMap<>();
 		
 		Random r = new Random();
 		int steps = 0;
@@ -156,8 +157,8 @@ public class Main {
 	 * @param agents the list of agents used in a trial
 	 * @return a HashMap of String/Integer
 	 */
-	public static HashMap<String, Integer> listOfWords(ArrayList<Agent> agents){
-		HashMap<String, Integer> list = new HashMap<String, Integer>();
+	public static LinkedHashMap<String, Integer> listOfWords(ArrayList<Agent> agents){
+		LinkedHashMap<String, Integer> list = new LinkedHashMap<String, Integer>();
 		for(Agent a: agents) {
 			for(String s: a.getAllWords()) {
 				if(!list.containsKey(s)) list.put(s, 1);
@@ -172,14 +173,14 @@ public class Main {
 	 * @param map The map to be shortened
 	 * @return A shortened map
 	 */
-	public static <K, V extends Comparable<? super V>> HashMap<K, V> shortenMap(Map<K, V> map) {
+	public static <K, V extends Comparable<? super V>> LinkedHashMap<K, V> shortenMap(Map<K, V> map) {
         List<Entry<K, V>> list = new ArrayList<>(map.entrySet());
         list.sort(Entry.comparingByValue());
-
-        HashMap<K, V> result = new HashMap<>();
+        
+        LinkedHashMap<K, V> result = new LinkedHashMap<>();
         int i = 0;
         while(i < list.size() && i < 20) {
-        	Entry<K, V> entry = list.get(i);
+        	Entry<K, V> entry = list.get(list.size() - i - 1);
             result.put(entry.getKey(), entry.getValue());
             i ++;
         }

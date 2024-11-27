@@ -120,6 +120,7 @@ public class Main {
 			arr.add(steps);
 		}
 		else System.out.println("Agents did not converge within the maximum steps");
+		map = listOfWords(agents);
 	}
 	
 	/**

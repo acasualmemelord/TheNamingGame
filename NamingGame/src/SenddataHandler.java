@@ -12,20 +12,18 @@ public class SenddataHandler implements HttpHandler {
     @Override
     public void handle(HttpExchange exchange) throws IOException {
         if ("POST".equalsIgnoreCase(exchange.getRequestMethod())) {
-            String requestBody = new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
-
+        	String requestBody = new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
 
             Map<String, Integer> data = parseJson(requestBody);
 
             int trial = data.getOrDefault("trial", 0);
-            int number = data.getOrDefault("number", 0);
-            int bar = data.getOrDefault("bar", 0);
+            int agent = data.getOrDefault("agent", 0);
             int word = data.getOrDefault("word", 0);
+            int lat = data.getOrDefault("lat", 0);
             System.out.println("Received data: " + data);
-            System.out.print("Trial: " + trial + ", ");
-            System.out.print("Number: " + number + ", ");
-            System.out.print("Bar: " + bar + ", ");
-            System.out.println("Word: " + word);
+            System.out.print("Trials: " + trial + ", ");
+            System.out.print("Agents: " + agent + ", ");
+            System.out.println("Lat?: " + (lat == 1));
             
             String response = String.format("""
                 {
@@ -33,11 +31,11 @@ public class SenddataHandler implements HttpHandler {
                     "receivedData": {
                         "trial": %d,
                         "agent": %d,
-                        "bar": %d,
+                        "lat": %d,
                         "word": %d
                     }
                 }
-                """, trial, number, bar, word);
+                """, trial, agent, lat, word);
 
             exchange.getResponseHeaders().set("Content-Type", "application/json");
             exchange.sendResponseHeaders(200, response.getBytes().length);
@@ -45,6 +43,8 @@ public class SenddataHandler implements HttpHandler {
             try (OutputStream os = exchange.getResponseBody()) {
                 os.write(response.getBytes());
             }
+            
+            Main.trial(agent, 100000, (lat == 1), 2, false);
         } else {
             String response = "Method Not Allowed";
             exchange.sendResponseHeaders(405, response.getBytes().length);

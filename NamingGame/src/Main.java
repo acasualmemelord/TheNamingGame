@@ -29,8 +29,11 @@ public class Main {
 	 * @param debug whether console prints out debug messages
 	 */
 	public static void trial(int agentNum, int maxSteps, boolean lattice, int connections, boolean debug) {
+		if (agentNum < 2) throw new IllegalArgumentException("there must be at least 2 agents");
 		if (lattice && connections < 1) throw new IllegalArgumentException("agents must have at least one connnection");
 		if (lattice && connections > agentNum) throw new IllegalArgumentException("the amount of connections cannot exceed the number of agents");
+		
+		map = new HashMap<>();
 		
 		Random r = new Random();
 		int steps = 0;

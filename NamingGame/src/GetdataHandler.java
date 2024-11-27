@@ -6,7 +6,7 @@ import java.io.OutputStream;
 import java.util.HashMap;
 
 public class GetdataHandler implements HttpHandler {
-	private final HashMap<String, Integer> data;
+	private HashMap<String, Integer> data;
     public GetdataHandler() {
         this.data = Main.map;
     }
@@ -14,8 +14,9 @@ public class GetdataHandler implements HttpHandler {
     @Override
     public void handle(HttpExchange exchange) throws IOException {
         if ("GET".equalsIgnoreCase(exchange.getRequestMethod())) {
+        	data = Main.map;
         	String dataJson = mapToJson(data);
-
+        	
             String response = String.format("""
                     {
                         "message": "Data fetched successfully",

@@ -23,6 +23,7 @@ public class GetdataHandler implements HttpHandler {
                         "data": %s
                     }
                     """, dataJson);
+            System.out.println(data);
         	
             exchange.getResponseHeaders().set("Content-Type", "application/json");
             exchange.sendResponseHeaders(200, response.getBytes().length);

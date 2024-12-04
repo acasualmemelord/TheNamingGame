@@ -113,5 +113,76 @@ class MainTest {
 		}
 	}
 	
+	@Test
+    void trialConvergenceTest() {
+        Main.arr = new ArrayList<>(); // Reset static variables
+        Main.maps = new ArrayList<>();
+        
+        int agentNum = 5;
+        int maxSteps = 1000;
+        boolean lattice = true;
+        int connections = 2;
+        boolean debug = false;
+
+        Main.trial(agentNum, maxSteps, lattice, connections, debug);
+
+        // Verify that all agents converged
+        assertFalse(Main.arr.isEmpty(), "Steps array should not be empty");
+        assertTrue(Main.arr.get(0) < maxSteps, "Agents should converge within maxSteps");
+        assertEquals(1, Main.maps.get(Main.maps.size() - 1).keySet().size(), "Final map should have only one word indicating convergence");
+    }
 	
+	@Test
+    void trialNonConvergenceTest() {
+        Main.arr = new ArrayList<>();
+        Main.maps = new ArrayList<>();
+
+        int agentNum = 5;
+        int maxSteps = 10; // Too few steps for convergence
+        boolean lattice = false;
+        int connections = 0; // Not relevant when lattice is false
+        boolean debug = false;
+
+        Main.trial(agentNum, maxSteps, lattice, connections, debug);
+
+        // Verify that agents did not converge
+        assertTrue(Main.arr.isEmpty(), "Steps array should be empty when agents do not converge");
+        assertNotEquals(1, Main.maps.get(Main.maps.size() - 1).keySet().size(), "Final map should have more than one word");
+    }
+	
+	@Test
+    void trialTwoAgentsTest() {
+        Main.arr = new ArrayList<>();
+        Main.maps = new ArrayList<>();
+
+        int agentNum = 2;
+        int maxSteps = 500;
+        boolean lattice = true;
+        int connections = 1; // Only one connection possible
+        boolean debug = true;
+
+        Main.trial(agentNum, maxSteps, lattice, connections, debug);
+
+        // Verify that agents converge
+        assertFalse(Main.arr.isEmpty(), "Steps array should not be empty");
+        assertTrue(Main.arr.get(0) < maxSteps, "Agents should converge within maxSteps");
+    }
+	
+	@Test
+    void trialInvalidInputTest() {
+        // Test invalid number of agents
+        assertThrows(IllegalArgumentException.class, () -> {
+            Main.trial(1, 1000, true, 1, false);
+        });
+
+        // Test invalid connections
+        assertThrows(IllegalArgumentException.class, () -> {
+            Main.trial(5, 1000, true, 0, false);
+        });
+
+        // Test connections greater than agents
+        assertThrows(IllegalArgumentException.class, () -> {
+            Main.trial(5, 1000, true, 6, false);
+        });
+    }
 }

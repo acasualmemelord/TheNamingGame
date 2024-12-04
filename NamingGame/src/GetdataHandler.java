@@ -7,6 +7,7 @@ import java.util.HashMap;
 
 public class GetdataHandler implements HttpHandler {
 	private HashMap<String, Integer> data;
+	static int n = 0;
     public GetdataHandler() {
         this.data = Main.map;
     }
@@ -14,7 +15,7 @@ public class GetdataHandler implements HttpHandler {
     @Override
     public void handle(HttpExchange exchange) throws IOException {
         if ("GET".equalsIgnoreCase(exchange.getRequestMethod())) {
-        	data = Main.map;
+        	data = Main.maps.get(n);
         	String dataJson = mapToJson(data);
         	
             String response = String.format("""
@@ -31,6 +32,7 @@ public class GetdataHandler implements HttpHandler {
             try (OutputStream os = exchange.getResponseBody()) {
                 os.write(response.getBytes());
             }
+            if(n != Main.maps.size()) n ++;
         } else {
             String response = "Method Not Allowed";
             exchange.sendResponseHeaders(405, response.getBytes().length);

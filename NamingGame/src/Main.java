@@ -15,6 +15,7 @@ public class Main {
 	
 	public static StringBuilder sb = new StringBuilder();
 	public static void main(String[] args) {
+		
 		int trials = 1;
 		int agentNum = 100;
 		int maxSteps = 100000;
@@ -33,8 +34,9 @@ public class Main {
 			for (int j = 1; j <= 5; j ++) {
 				try (PrintWriter writer = new PrintWriter(String.format("data-%d-%d.csv", i, j))) {
 					sb = new StringBuilder();
+					sb.append("Agent #,Step #,Word Count\n");
 					trial(i, Integer.MAX_VALUE, true, 2, false);
-
+					writer.write(sb.toString());
 		        } catch (IOException e) {
 		            e.printStackTrace();
 		        }
@@ -90,7 +92,7 @@ public class Main {
 			
 			if(steps > 0 && steps % 500 == 0) {
 				map = listOfWords(agents);
-				sb.append(String.format("%s,%s,%s\n", agents, steps, map.size()));
+				//sb.append(String.format("%s,%s,%s\n", agentNum, steps, map.size()));
 				maps.add(map);
 				if (map.keySet().size() > 20) map = shortenMap(map);
 				if (debug) System.out.println("step " + steps + ": " + mapToString(map));
@@ -221,6 +223,6 @@ public class Main {
 		for (String s : map.keySet()) {
 			result += String.format("%s: %d, ", s, map.get(s));
 		}
-		return result;
+		return (result.length() < 2) ? result : result.substring(0, result.length() - 2);
 	}
 }

@@ -129,7 +129,7 @@ class MainTest {
         // Verify that all agents converged
         assertFalse(Main.arr.isEmpty(), "Steps array should not be empty");
         assertTrue(Main.arr.get(0) < maxSteps, "Agents should converge within maxSteps");
-        assertEquals(1, Main.maps.get(Main.maps.size() - 1).keySet().size(), "Final map should have only one word indicating convergence");
+        assertEquals(1, Main.map.size(), "Final map should have only one word indicating convergence");
     }
 	
 	@Test

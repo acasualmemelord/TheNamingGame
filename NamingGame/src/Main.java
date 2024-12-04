@@ -8,6 +8,7 @@ import java.util.Random;
 
 public class Main {
 	public static LinkedHashMap<String, Integer> map = new LinkedHashMap<>();
+	public static ArrayList<LinkedHashMap<String, Integer>> maps = new ArrayList<LinkedHashMap<String, Integer>>();
 	public static ArrayList<Integer> arr = new ArrayList<>();
 	public static void main(String[] args) {
 		int trials = 1;
@@ -17,11 +18,6 @@ public class Main {
 			System.out.print("trial " + (i + 1) + ": ");
 			trial(agentNum, maxSteps, true, 2, true);
 		}
-		int sum = 0;
-		for (int i : arr) {
-			sum += i;
-		}
-		System.out.println("average: " + (sum / arr.size()));
 	}
 
 	/**
@@ -63,7 +59,6 @@ public class Main {
 			}
 		}
 		
-		map = listOfWords(agents);
 		//loop until maxsteps are reached or all agents converge
 		while(steps < maxSteps) {
 			if(converged(agents)) {
@@ -73,6 +68,7 @@ public class Main {
 			
 			if(steps > 0 && steps % 500 == 0) {
 				map = listOfWords(agents);
+				maps.add(map);
 				if(map.keySet().size() > 20) map = shortenMap(map);
 				if (debug) System.out.println("step " + steps + ": " + mapToString(map));
 			}
@@ -121,18 +117,22 @@ public class Main {
 		}
 		else System.out.println("Agents did not converge within the maximum steps");
 		map = listOfWords(agents);
+		maps.add(map);
+		maps.add(new LinkedHashMap<String, Integer>());
 	}
 	
 	/**
-	 * Creates a random word with a length between 1 and 10.
+	 * Creates a random word with a length between 1 and 10 and alternating vowels and consonants.
 	 * @param r
 	 * @return random word
 	 */
 	public static String randomWord(Random r) {
 		int length = r.nextInt(1, 11);
+		char[] consonants = new char[] {'b', 'c', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'p', 'q', 'r', 's', 't', 'v', 'w', 'x', 'y', 'z'};
+		char[] vowels = new char[] {'a', 'e', 'i', 'o', 'u', 'y'};
 		String result = "";
 		for(int i = 0; i < length; i ++) {
-			result += (char) (64 + r.nextInt(1, 26));
+			result += (i % 2 == 1) ? consonants[r.nextInt(0, 21)] : vowels[r.nextInt(0, 5)];
 		}
 		return result;
 	}

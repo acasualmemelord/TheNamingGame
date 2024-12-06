@@ -23,25 +23,10 @@ public class Main {
 			System.out.print("trial " + (i + 1) + ": ");
 			trial(agentNum, maxSteps, true, 2, true);
 			for(LinkedHashMap<String, Integer> map : maps) {
-				System.out.print("[" + mapToString(map) + "], ");
+				System.out.println("[" + mapToString(map) + "]");
 			}
 		}
 		//writeCSV();
-	}
-	
-	public static void writeCSV() {
-		for(int i = 250; i <= 2000; i *= 2) {
-			for (int j = 1; j <= 5; j ++) {
-				try (PrintWriter writer = new PrintWriter(String.format("data-%d-%d.csv", i, j))) {
-					sb = new StringBuilder();
-					sb.append("Agent #,Step #,Word Count\n");
-					trial(i, Integer.MAX_VALUE, true, 2, false);
-					writer.write(sb.toString());
-		        } catch (IOException e) {
-		            e.printStackTrace();
-		        }
-			}
-		}
 	}
 
 	/**
@@ -147,17 +132,17 @@ public class Main {
 	}
 	
 	/**
-	 * Creates a random word with a length between 1 and 10 and alternating vowels and consonants.
+	 * Creates a random word with a length between 2 and 10 and alternating vowels and consonants.
 	 * @param r
 	 * @return random word
 	 */
 	public static String randomWord(Random r) {
-		int length = r.nextInt(1, 11);
+		int length = r.nextInt(2, 11);
 		char[] consonants = new char[] {'b', 'c', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'p', 'q', 'r', 's', 't', 'v', 'w', 'x', 'y', 'z'};
 		char[] vowels = new char[] {'a', 'e', 'i', 'o', 'u', 'y'};
 		String result = "";
 		for(int i = 0; i < length; i ++) {
-			result += (i % 2 == 1) ? consonants[r.nextInt(0, 21)] : vowels[r.nextInt(0, 5)];
+			result += (i % 2 == 1) ? consonants[r.nextInt(0, 21)] : vowels[r.nextInt(0, 6)];
 		}
 		return result;
 	}
@@ -224,5 +209,23 @@ public class Main {
 			result += String.format("%s: %d, ", s, map.get(s));
 		}
 		return (result.length() < 2) ? result : result.substring(0, result.length() - 2);
+	}
+	
+	/**
+	 * Writes data to a CSV file. Used for offline data collection only.
+	 */
+	public static void writeCSV() {
+		for(int i = 250; i <= 2000; i *= 2) {
+			for (int j = 1; j <= 5; j ++) {
+				try (PrintWriter writer = new PrintWriter(String.format("data-%d-%d.csv", i, j))) {
+					sb = new StringBuilder();
+					sb.append("Agent #,Step #,Word Count\n");
+					trial(i, Integer.MAX_VALUE, true, 2, false);
+					writer.write(sb.toString());
+		        } catch (IOException e) {
+		            e.printStackTrace();
+		        }
+			}
+		}
 	}
 }

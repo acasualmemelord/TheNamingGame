@@ -47,7 +47,7 @@ public class Agent {
 	
 	/**
 	 * Gets a random connection.
-	 * @return
+	 * @return an Agent that is connected to this Agent
 	 */
 	public Agent getRandomConnection() {
 		if (connections.size() == 0) throw new IndexOutOfBoundsException("No connection found!");
